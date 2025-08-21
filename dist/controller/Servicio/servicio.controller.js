@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const servicio_model_1 = __importDefault(require("../../Model/Servicio/servicio.model"));
 class ServicioController {
+    // Obtener servicios por especialidad (texto)
     static async obtenerPorEspecialidadTexto(req, res) {
         try {
             const { idEspecialidad } = req.params;
@@ -30,6 +31,7 @@ class ServicioController {
             });
         }
     }
+    // Obtener todos los servicios (texto)
     static async obtenerTodosServiciosTexto(_req, res) {
         try {
             const resultado = await servicio_model_1.default.obtenerTodosServiciosTexto();
@@ -47,6 +49,7 @@ class ServicioController {
             });
         }
     }
+    // Obtener servicios por especialidad (estructurado)
     static async obtenerPorEspecialidad(req, res) {
         try {
             const { idEspecialidad } = req.params;
@@ -74,4 +77,3 @@ class ServicioController {
     }
 }
 exports.default = ServicioController;
-//# sourceMappingURL=servicio.controller.js.map

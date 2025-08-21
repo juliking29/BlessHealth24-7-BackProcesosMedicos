@@ -1,10 +1,12 @@
 "use strict";
+// controller/Autorizacion/autorizacion.controller.ts
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const autorizacion_model_1 = __importDefault(require("../../Model/OrdenMedica/autorizacion.model"));
 class AutorizacionController {
+    // Crear una nueva autorización
     static async crear(req, res) {
         try {
             const autorizacion = req.body;
@@ -30,6 +32,7 @@ class AutorizacionController {
             });
         }
     }
+    // Obtener todas las autorizaciones
     static async obtenerTodas(_req, res) {
         try {
             const autorizaciones = await autorizacion_model_1.default.obtenerTodas();
@@ -47,6 +50,7 @@ class AutorizacionController {
             });
         }
     }
+    // Obtener autorizaciones por orden médica
     static async obtenerPorOrdenMedica(req, res) {
         try {
             const { idOrdenMedica } = req.params;
@@ -72,6 +76,7 @@ class AutorizacionController {
             });
         }
     }
+    // Obtener una autorización por ID
     static async obtenerPorId(req, res) {
         try {
             const { id } = req.params;
@@ -97,6 +102,7 @@ class AutorizacionController {
             });
         }
     }
+    // Actualizar una autorización
     static async actualizar(req, res) {
         try {
             const { id } = req.params;
@@ -125,6 +131,7 @@ class AutorizacionController {
             });
         }
     }
+    // Eliminar una autorización
     static async eliminar(req, res) {
         try {
             const { id } = req.params;
@@ -202,4 +209,3 @@ class AutorizacionController {
     }
 }
 exports.default = AutorizacionController;
-//# sourceMappingURL=autorizacion.controller.js.map

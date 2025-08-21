@@ -5,6 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const medico_model_1 = __importDefault(require("../../Model/Uusario/medico.model"));
 class MedicoController {
+    // Método para obtener todos los médicos
+    // Method to get all doctors
     static async obtenerTodos(_req, res) {
         try {
             const medicos = await medico_model_1.default.obtenerTodos();
@@ -22,6 +24,8 @@ class MedicoController {
             });
         }
     }
+    // Método para obtener médicos por especialidad
+    // Method to get doctors by specialty
     static async obtenerPorEspecialidad(req, res) {
         try {
             const { idEspecialidad } = req.params;
@@ -47,6 +51,8 @@ class MedicoController {
             });
         }
     }
+    // Método para obtener médicos por sede
+    // Method to get doctors by location
     static async obtenerPorSede(req, res) {
         try {
             const { idSede } = req.params;
@@ -72,6 +78,8 @@ class MedicoController {
             });
         }
     }
+    // Método para obtener un médico por su ID
+    // Method to get a doctor by ID
     static async obtenerPorId(req, res) {
         try {
             const { id } = req.params;
@@ -97,6 +105,8 @@ class MedicoController {
             });
         }
     }
+    // Método para obtener un médico por número de documento
+    // Method to get a doctor by document number
     static async obtenerPorDocumento(req, res) {
         try {
             const { numeroDocumento } = req.params;
@@ -129,6 +139,8 @@ class MedicoController {
             });
         }
     }
+    // Método para obtener un médico por registro médico
+    // Method to get a doctor by medical license
     static async obtenerPorRegistroMedico(req, res) {
         try {
             const { registroMedico } = req.params;
@@ -161,6 +173,8 @@ class MedicoController {
             });
         }
     }
+    // Método para buscar médicos por nombre
+    // Method to search doctors by name
     static async buscarPorNombre(req, res) {
         try {
             const { nombre } = req.params;
@@ -186,9 +200,12 @@ class MedicoController {
             });
         }
     }
+    // Método para crear un nuevo médico
+    // Method to create a new doctor
     static async crear(req, res) {
         try {
             const medico = req.body;
+            // Validaciones básicas
             if (!medico.idMedico || !medico.idEspecialidad || !medico.registroMedico ||
                 !medico.universidad || !medico.anioGraduacion) {
                 res.status(400).json({
@@ -197,6 +214,7 @@ class MedicoController {
                 });
                 return;
             }
+            // Verificar si ya existe un médico con el mismo registro médico
             const medicoExistente = await medico_model_1.default.obtenerPorRegistroMedico(medico.registroMedico);
             if (medicoExistente) {
                 res.status(409).json({
@@ -219,10 +237,13 @@ class MedicoController {
             });
         }
     }
+    // Método para actualizar un médico por su ID
+    // Method to update a doctor by ID
     static async actualizar(req, res) {
         try {
             const { id } = req.params;
             const medico = req.body;
+            // Verificar que el médico existe
             const medicoExistente = await medico_model_1.default.obtenerPorId(Number(id));
             if (!medicoExistente) {
                 res.status(404).json({
@@ -231,6 +252,7 @@ class MedicoController {
                 });
                 return;
             }
+            // Si se está actualizando el registro médico, verificar que no exista otro médico con ese registro
             if (medico.registroMedico && medico.registroMedico !== medicoExistente.registroMedico) {
                 const medicoConMismoRegistro = await medico_model_1.default.obtenerPorRegistroMedico(medico.registroMedico);
                 if (medicoConMismoRegistro && medicoConMismoRegistro.idMedico !== Number(id)) {
@@ -255,9 +277,12 @@ class MedicoController {
             });
         }
     }
+    // Método para eliminar (desactivar) un médico por su ID
+    // Method to delete (deactivate) a doctor by ID
     static async eliminar(req, res) {
         try {
             const { id } = req.params;
+            // Verificar que el médico existe
             const medicoExistente = await medico_model_1.default.obtenerPorId(Number(id));
             if (!medicoExistente) {
                 res.status(404).json({
@@ -280,9 +305,12 @@ class MedicoController {
             });
         }
     }
+    // Método para eliminar físicamente un médico por su ID
+    // Method to physically delete a doctor by ID
     static async eliminarFisicamente(req, res) {
         try {
             const { id } = req.params;
+            // Verificar que el médico existe
             const medicoExistente = await medico_model_1.default.obtenerPorId(Number(id));
             if (!medicoExistente) {
                 res.status(404).json({
@@ -305,6 +333,8 @@ class MedicoController {
             });
         }
     }
+    // Método para obtener especialidades
+    // Method to get specialties
     static async obtenerEspecialidades(_req, res) {
         try {
             const especialidades = await medico_model_1.default.obtenerEspecialidades();
@@ -324,4 +354,3 @@ class MedicoController {
     }
 }
 exports.default = MedicoController;
-//# sourceMappingURL=medico.controller.js.map

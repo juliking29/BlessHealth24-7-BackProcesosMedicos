@@ -1,3 +1,3 @@
 "use strict";
+// interfaces/Cita/cita.interface.ts
 Object.defineProperty(exports, "__esModule", { value: true });
-//# sourceMappingURL=cita.interface.js.map

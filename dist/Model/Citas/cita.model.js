@@ -1,7 +1,9 @@
 "use strict";
+// Model/Cita/cita.model.ts
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("../../config/database");
 class CitaModel {
+    // Método para disponibilidad por hora específica
     static async obtenerMedicosDisponiblesPorEspecialidad(filtros) {
         const query = `
             CALL CLINICA_PI3.ObtenerMedicosDisponiblesPorEspecialidad(?, ?, ?)
@@ -13,6 +15,7 @@ class CitaModel {
         ]);
         return rows[0];
     }
+    // Método para disponibilidad por rango de fechas
     static async obtenerMedicosDisponiblesPorSedeEspecialidad(filtros) {
         const query = `
             CALL CLINICA_PI3.ObtenerMedicosDisponiblesPorSedeEspecialidad(?, ?, ?, ?)
@@ -25,6 +28,7 @@ class CitaModel {
         ]);
         return rows[0];
     }
+    // Método para horarios disponibles en un día
     static async obtenerMedicosConHorariosDisponibles(filtros) {
         const query = `
             CALL CLINICA_PI3.ObtenerMedicosConHorariosDisponibles(?, ?, ?)
@@ -36,6 +40,7 @@ class CitaModel {
         ]);
         return rows[0];
     }
+    // Obtener todas las citas con información relacionada
     static async obtenerTodos() {
         const query = `
             SELECT 
@@ -56,6 +61,7 @@ class CitaModel {
         const [rows] = await database_1.pool.query(query);
         return rows;
     }
+    // Obtener una cita por su ID
     static async obtenerPorId(id) {
         const query = `
             SELECT 
@@ -79,6 +85,7 @@ class CitaModel {
         }
         return null;
     }
+    // Crear una nueva cita
     static async crear(cita) {
         const query = `
             CALL CLINICA_PI3.AgendarCita(?, ?, ?, ?, ?, ?, ?)
@@ -92,6 +99,7 @@ class CitaModel {
             cita.sintomas || '',
             cita.idMedico
         ]);
+        // El procedimiento devuelve el ID de la cita creada
         return result[0][0].idCita;
     }
     static async actualizar(id, cita) {
@@ -99,11 +107,11 @@ class CitaModel {
         CALL CLINICA_PI3.ActualizarCita(?, ?, ?, ?, ?)
     `;
         await database_1.pool.query(query, [
-            id,
-            cita.idMedico || null,
-            cita.fechaHora,
-            cita.estadoCita || '',
-            cita.observaciones || ''
+            id, // p_idCita
+            cita.idMedico || null, // p_idMedico
+            cita.fechaHora, // p_fechaHora
+            cita.estadoCita || '', // p_estadoCita ← ¡Agregar este campo!
+            cita.observaciones || '' // p_observaciones ← Y este también
         ]);
         const citaActualizada = await this.obtenerPorId(id);
         if (!citaActualizada) {
@@ -111,18 +119,21 @@ class CitaModel {
         }
         return citaActualizada;
     }
+    // Cancelar una cita
     static async cancelar(id, motivoCancelacion) {
         const query = `
             CALL CLINICA_PI3.CancelarCita(?, ?)
         `;
         await database_1.pool.query(query, [id, motivoCancelacion]);
     }
+    // Eliminar una cita
     static async eliminar(id) {
         const query = `
             CALL CLINICA_PI3.EliminarCita(?)
         `;
         await database_1.pool.query(query, [id]);
     }
+    // Finalizar una cita
     static async finalizar(id) {
         const query = `
             CALL CLINICA_PI3.FinalizarCitaConRegistro(?)
@@ -130,6 +141,7 @@ class CitaModel {
         const [result] = await database_1.pool.query(query, [id]);
         return result[0][0];
     }
+    // Obtener todos los médicos con sus especialidades
     static async obtenerTodosMedicosConEspecialidades() {
         const query = `
             CALL CLINICA_PI3.ObtenerTodosMedicosConEspecialidades()
@@ -144,6 +156,7 @@ class CitaModel {
         const [rows] = await database_1.pool.query(query, [idPaciente, estado || null]);
         return rows[0];
     }
+    // Obtener citas por doctor
     static async obtenerCitasPorDoctor(idMedico, estado, fechaInicio, fechaFin) {
         const query = `
             CALL CLINICA_PI3.ObtenerCitasPorDoctor(?, ?, ?, ?)
@@ -156,6 +169,7 @@ class CitaModel {
         ]);
         return rows[0];
     }
+    // Obtener todas las sedes
     static async obtenerSedes() {
         const query = `
             SELECT * FROM CLINICA_PI3.SEDES
@@ -163,6 +177,7 @@ class CitaModel {
         const [rows] = await database_1.pool.query(query);
         return rows;
     }
+    // Obtener todas las especialidades
     static async obtenerEspecialidades() {
         const query = `
             SELECT * FROM CLINICA_PI3.ESPECIALIDADES
@@ -170,6 +185,7 @@ class CitaModel {
         const [rows] = await database_1.pool.query(query);
         return rows;
     }
+    // Obtener todos los servicios
     static async obtenerServicios() {
         const query = `
             SELECT * FROM CLINICA_PI3.SERVICIOS
@@ -177,6 +193,7 @@ class CitaModel {
         const [rows] = await database_1.pool.query(query);
         return rows;
     }
+    // Buscar citas por paciente (con cédula)
     static async buscarCitasPorPaciente(cedulaPaciente, fechaInicio, fechaFin) {
         const query = `
         CALL CLINICA_PI3.BuscarCitasPaciente(?, ?, ?)
@@ -188,6 +205,7 @@ class CitaModel {
         ]);
         return rows[0];
     }
+    // Buscar citas por médico (con cédula)
     static async buscarCitasPorMedico(cedulaMedico, fechaInicio, fechaFin) {
         const query = `
         CALL CLINICA_PI3.BuscarCitasMedico(?, ?, ?)
@@ -201,4 +219,3 @@ class CitaModel {
     }
 }
 exports.default = CitaModel;
-//# sourceMappingURL=cita.model.js.map

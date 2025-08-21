@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("../../config/database");
 class HistoriaClinicaModel {
+    // Obtener historias clínicas por número de documento del paciente
     static async obtenerPorDocumentoPaciente(numeroDocumento) {
         const query = `
             SELECT 
@@ -17,6 +18,7 @@ class HistoriaClinicaModel {
         const [rows] = await database_1.pool.query(query, [numeroDocumento]);
         return rows;
     }
+    // Obtener todas las historias clínicas
     static async obtenerTodos() {
         const query = `
             SELECT 
@@ -31,6 +33,7 @@ class HistoriaClinicaModel {
         const [rows] = await database_1.pool.query(query);
         return rows;
     }
+    // Obtener historias clínicas por paciente
     static async obtenerPorPaciente(idPaciente) {
         const query = `
             SELECT 
@@ -46,6 +49,7 @@ class HistoriaClinicaModel {
         const [rows] = await database_1.pool.query(query, [idPaciente]);
         return rows;
     }
+    // Obtener una historia clínica por su ID
     static async obtenerPorId(id) {
         const query = `
             SELECT 
@@ -63,6 +67,7 @@ class HistoriaClinicaModel {
         }
         return null;
     }
+    // Crear una nueva historia clínica
     static async crear(historiaClinica) {
         const query = `
             INSERT INTO CLINICA_PI3.HISTORIAS_CLINICAS 
@@ -83,6 +88,7 @@ class HistoriaClinicaModel {
             historiaClinica.medicamentos || null,
             historiaClinica.antecedentesFamiliares || null,
             historiaClinica.observaciones || null,
+            // Nuevos campos
             historiaClinica.actividadFisica || null,
             historiaClinica.alimentacionDiaria || null,
             historiaClinica.suenio || null,
@@ -102,9 +108,12 @@ class HistoriaClinicaModel {
         ]);
         return result.insertId;
     }
+    // Actualizar una historia clínica
     static async actualizar(id, historiaClinica) {
+        // Construir la query dinámicamente
         const campos = [];
         const valores = [];
+        // Campos originales
         if (historiaClinica.tipoSangre !== undefined) {
             campos.push('tipoSangre = ?');
             valores.push(historiaClinica.tipoSangre);
@@ -129,6 +138,7 @@ class HistoriaClinicaModel {
             campos.push('observaciones = ?');
             valores.push(historiaClinica.observaciones);
         }
+        // Nuevos campos
         if (historiaClinica.actividadFisica !== undefined) {
             campos.push('actividadFisica = ?');
             valores.push(historiaClinica.actividadFisica);
@@ -193,6 +203,7 @@ class HistoriaClinicaModel {
             campos.push('epicrisis = ?');
             valores.push(historiaClinica.epicrisis);
         }
+        // Siempre actualizamos la fecha de última actualización
         campos.push('fechaUltimaActualizacion = CURRENT_TIMESTAMP');
         if (campos.length === 0) {
             throw new Error('No hay campos para actualizar');
@@ -200,15 +211,16 @@ class HistoriaClinicaModel {
         valores.push(id);
         const query = `UPDATE CLINICA_PI3.HISTORIAS_CLINICAS SET ${campos.join(', ')} WHERE idHistoriaClinica = ?`;
         await database_1.pool.query(query, valores);
+        // Obtener y devolver la historia clínica actualizada
         const historiaActualizada = await this.obtenerPorId(id);
         if (!historiaActualizada) {
             throw new Error('Historia clínica no encontrada después de actualización');
         }
         return historiaActualizada;
     }
+    // Eliminar una historia clínica
     static async eliminar(id) {
         await database_1.pool.query('DELETE FROM CLINICA_PI3.HISTORIAS_CLINICAS WHERE idHistoriaClinica = ?', [id]);
     }
 }
 exports.default = HistoriaClinicaModel;
-//# sourceMappingURL=historiaClinica.model.js.map

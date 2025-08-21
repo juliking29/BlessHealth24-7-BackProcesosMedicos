@@ -1,13 +1,16 @@
 "use strict";
+// controller/RegistroConsulta/registroConsulta.controller.ts
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const registroConsulta_model_1 = __importDefault(require("../../Model/RegistroConsulta/registroConsulta.model"));
 class RegistroConsultaController {
+    // Crear un nuevo registro de consulta
     static async crear(req, res) {
         try {
             const registro = req.body;
+            // Validaciones básicas
             if (!registro.idHistoriaClinica || !registro.idMedico || !registro.fechaConsulta || !registro.motivoConsulta) {
                 res.status(400).json({
                     success: false,
@@ -30,6 +33,7 @@ class RegistroConsultaController {
             });
         }
     }
+    // Obtener todos los registros
     static async obtenerTodos(_req, res) {
         try {
             const registros = await registroConsulta_model_1.default.obtenerTodos();
@@ -47,6 +51,7 @@ class RegistroConsultaController {
             });
         }
     }
+    // Obtener registros por cédula del paciente
     static async obtenerPorCedulaPaciente(req, res) {
         try {
             const { numeroDocumento } = req.params;
@@ -72,6 +77,7 @@ class RegistroConsultaController {
             });
         }
     }
+    // Obtener registros por ID de cita
     static async obtenerPorIdCita(req, res) {
         try {
             const { idCita } = req.params;
@@ -97,6 +103,7 @@ class RegistroConsultaController {
             });
         }
     }
+    // Obtener un registro por ID
     static async obtenerPorId(req, res) {
         try {
             const { id } = req.params;
@@ -122,6 +129,7 @@ class RegistroConsultaController {
             });
         }
     }
+    // Actualizar un registro
     static async actualizar(req, res) {
         try {
             const { id } = req.params;
@@ -150,6 +158,7 @@ class RegistroConsultaController {
             });
         }
     }
+    // Eliminar un registro
     static async eliminar(req, res) {
         try {
             const { id } = req.params;
@@ -177,4 +186,3 @@ class RegistroConsultaController {
     }
 }
 exports.default = RegistroConsultaController;
-//# sourceMappingURL=registroConsulta.controller.js.map

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("../../config/database");
 class ServicioModel {
+    // Obtener servicios por especialidad (formateado como texto)
     static async obtenerServiciosPorEspecialidadTexto(idEspecialidad) {
         try {
             const query = 'SELECT fn_servicios_por_especialidad(?) AS resultado';
@@ -14,6 +15,7 @@ class ServicioModel {
             throw new Error(`Error al obtener servicios por especialidad: ${error instanceof Error ? error.message : error}`);
         }
     }
+    // Obtener todos los servicios (formateado como texto)
     static async obtenerTodosServiciosTexto() {
         try {
             const query = 'SELECT fn_todos_servicios_con_precios() AS resultado';
@@ -26,6 +28,7 @@ class ServicioModel {
             throw new Error(`Error al obtener todos los servicios: ${error instanceof Error ? error.message : error}`);
         }
     }
+    // Obtener servicios por especialidad (estructurado)
     static async obtenerServiciosPorEspecialidad(idEspecialidad) {
         try {
             const query = 'CALL VerPreciosEspecialidad(?)';
@@ -38,4 +41,3 @@ class ServicioModel {
     }
 }
 exports.default = ServicioModel;
-//# sourceMappingURL=servicio.model.js.map

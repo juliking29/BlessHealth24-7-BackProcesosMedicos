@@ -1,7 +1,9 @@
 "use strict";
+// Model/RegistroConsulta/registroConsulta.model.ts
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("../../config/database");
 class RegistroConsultaModel {
+    // Crear un nuevo registro de consulta
     static async crear(registro) {
         const query = `
             INSERT INTO CLINICA_PI3.REGISTROS_CONSULTAS (
@@ -29,6 +31,7 @@ class RegistroConsultaModel {
         ]);
         return result.insertId;
     }
+    // Obtener todos los registros de consulta
     static async obtenerTodos() {
         const query = `
             SELECT 
@@ -51,6 +54,7 @@ class RegistroConsultaModel {
         const [rows] = await database_1.pool.query(query);
         return rows;
     }
+    // Obtener registros por cédula del paciente
     static async obtenerPorCedulaPaciente(numeroDocumento) {
         const query = `
             SELECT 
@@ -74,6 +78,7 @@ class RegistroConsultaModel {
         const [rows] = await database_1.pool.query(query, [numeroDocumento]);
         return rows;
     }
+    // Obtener registros por ID de cita
     static async obtenerPorIdCita(idCita) {
         const query = `
             SELECT 
@@ -97,6 +102,7 @@ class RegistroConsultaModel {
         const [rows] = await database_1.pool.query(query, [idCita]);
         return rows;
     }
+    // Obtener un registro por ID
     static async obtenerPorId(id) {
         const query = `
             SELECT 
@@ -122,6 +128,7 @@ class RegistroConsultaModel {
         }
         return null;
     }
+    // Actualizar un registro de consulta
     static async actualizar(id, registro) {
         const campos = [];
         const valores = [];
@@ -172,9 +179,9 @@ class RegistroConsultaModel {
         const query = `UPDATE CLINICA_PI3.REGISTROS_CONSULTAS SET ${campos.join(', ')} WHERE idRegistroConsulta = ?`;
         await database_1.pool.query(query, valores);
     }
+    // Eliminar un registro de consulta
     static async eliminar(id) {
         await database_1.pool.query('DELETE FROM CLINICA_PI3.REGISTROS_CONSULTAS WHERE idRegistroConsulta = ?', [id]);
     }
 }
 exports.default = RegistroConsultaModel;
-//# sourceMappingURL=registroConsulta.model.js.map

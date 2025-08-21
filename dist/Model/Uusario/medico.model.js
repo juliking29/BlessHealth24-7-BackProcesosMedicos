@@ -1,7 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// Model/medico/medico.model.ts
 const database_1 = require("../../config/database");
 class MedicoModel {
+    // Método para obtener todos los médicos con información completa
+    // Method to get all doctors with complete information
     static async obtenerTodos() {
         const query = `
             SELECT 
@@ -35,6 +38,8 @@ class MedicoModel {
         const [rows] = await database_1.pool.query(query);
         return rows;
     }
+    // Método para obtener médicos por especialidad
+    // Method to get doctors by specialty
     static async obtenerPorEspecialidad(idEspecialidad) {
         const query = `
             SELECT 
@@ -55,6 +60,8 @@ class MedicoModel {
         const [rows] = await database_1.pool.query(query, [idEspecialidad]);
         return rows;
     }
+    // Método para obtener médicos por sede
+    // Method to get doctors by location
     static async obtenerPorSede(idSede) {
         const query = `
             SELECT 
@@ -75,6 +82,8 @@ class MedicoModel {
         const [rows] = await database_1.pool.query(query, [idSede]);
         return rows;
     }
+    // Método para obtener un médico por su ID
+    // Method to get a doctor by their ID
     static async obtenerPorId(id) {
         const query = `
             SELECT 
@@ -110,6 +119,8 @@ class MedicoModel {
         }
         return null;
     }
+    // Método para obtener un médico por número de documento
+    // Method to get a doctor by document number
     static async obtenerPorDocumento(numeroDocumento) {
         const query = `
             SELECT 
@@ -145,6 +156,8 @@ class MedicoModel {
         }
         return null;
     }
+    // Método para obtener un médico por registro médico
+    // Method to get a doctor by medical license
     static async obtenerPorRegistroMedico(registroMedico) {
         const query = `
             SELECT 
@@ -168,7 +181,10 @@ class MedicoModel {
         }
         return null;
     }
+    // Método para crear un médico (requiere que el usuario ya exista)
+    // Method to create a doctor (requires the user to already exist)
     static async crear(medico) {
+        // Verificar que el usuario existe y tiene rol de médico (idRol = 2)
         const verificarUsuario = `
             SELECT idUsuario, idRol FROM CLINICA_PI3.USUARIOS 
             WHERE idUsuario = ? AND idRol = 2 AND estadoUsuario = 1
@@ -177,6 +193,7 @@ class MedicoModel {
         if (!Array.isArray(userRows) || userRows.length === 0) {
             throw new Error('El usuario no existe o no tiene rol de médico');
         }
+        // Verificar que no exista ya un médico con ese ID
         const verificarMedico = `
             SELECT idMedico FROM CLINICA_PI3.MEDICOS WHERE idMedico = ?
             `;
@@ -184,6 +201,7 @@ class MedicoModel {
         if (Array.isArray(medicoRows) && medicoRows.length > 0) {
             throw new Error('Ya existe un médico con ese ID de usuario');
         }
+        // Insertar el médico
         const query = `
             INSERT INTO CLINICA_PI3.MEDICOS 
             (idMedico, idEspecialidad, registroMedico, universidad, anioGraduacion, estadoMedico)
@@ -198,7 +216,10 @@ class MedicoModel {
             medico.estadoMedico || 1
         ]);
     }
+    // Método para actualizar la información de un médico
+    // Method to update a doctor's information
     static async actualizar(id, medico) {
+        // Construir la query dinámicamente según los campos proporcionados
         const campos = [];
         const valores = [];
         if (medico.idEspecialidad !== undefined) {
@@ -228,16 +249,24 @@ class MedicoModel {
         const query = `UPDATE CLINICA_PI3.MEDICOS SET ${campos.join(', ')} WHERE idMedico = ?`;
         await database_1.pool.query(query, valores);
     }
+    // Método para eliminar (desactivar) un médico
+    // Method to delete (deactivate) a doctor
     static async eliminar(id) {
         await database_1.pool.query('UPDATE CLINICA_PI3.MEDICOS SET estadoMedico = 0 WHERE idMedico = ?', [id]);
     }
+    // Método para eliminar físicamente un médico
+    // Method to physically delete a doctor
     static async eliminarFisicamente(id) {
         await database_1.pool.query('DELETE FROM CLINICA_PI3.MEDICOS WHERE idMedico = ?', [id]);
     }
+    // Método auxiliar para obtener especialidades
+    // Auxiliary method to get specialties
     static async obtenerEspecialidades() {
         const [rows] = await database_1.pool.query('SELECT * FROM CLINICA_PI3.ESPECIALIDADES WHERE estadoEspecialidad = 1');
         return rows;
     }
+    // Método para buscar médicos por nombre
+    // Method to search doctors by name
     static async buscarPorNombre(nombre) {
         const query = `
             SELECT 
@@ -262,4 +291,3 @@ class MedicoModel {
     }
 }
 exports.default = MedicoModel;
-//# sourceMappingURL=medico.model.js.map

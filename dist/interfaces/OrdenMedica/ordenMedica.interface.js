@@ -1,4 +1,5 @@
 "use strict";
+// interfaces/OrdenMedica/ordenMedica.interface.ts
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EstadoOrden = exports.TipoOrden = void 0;
 var TipoOrden;
@@ -15,4 +16,3 @@ var EstadoOrden;
     EstadoOrden["COMPLETADA"] = "Completada";
     EstadoOrden["CANCELADA"] = "Cancelada";
 })(EstadoOrden || (exports.EstadoOrden = EstadoOrden = {}));
-//# sourceMappingURL=ordenMedica.interface.js.map

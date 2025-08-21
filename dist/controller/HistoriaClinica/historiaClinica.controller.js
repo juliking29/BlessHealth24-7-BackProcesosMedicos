@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const historiaClinica_model_1 = __importDefault(require("../../Model/HistoriaClinica/historiaClinica.model"));
 class HistoriaClinicaController {
+    // Obtener historias clínicas por número de documento del paciente
     static async obtenerPorDocumentoPaciente(req, res) {
         try {
             const { documento } = req.params;
@@ -37,6 +38,7 @@ class HistoriaClinicaController {
             });
         }
     }
+    // Obtener todas las historias clínicas
     static async obtenerTodos(_req, res) {
         try {
             const historias = await historiaClinica_model_1.default.obtenerTodos();
@@ -54,6 +56,7 @@ class HistoriaClinicaController {
             });
         }
     }
+    // Obtener historias clínicas por paciente
     static async obtenerPorPaciente(req, res) {
         try {
             const { idPaciente } = req.params;
@@ -79,6 +82,7 @@ class HistoriaClinicaController {
             });
         }
     }
+    // Obtener una historia clínica por su ID
     static async obtenerPorId(req, res) {
         try {
             const { id } = req.params;
@@ -104,9 +108,11 @@ class HistoriaClinicaController {
             });
         }
     }
+    // Crear una nueva historia clínica
     static async crear(req, res) {
         try {
             const historia = req.body;
+            // Validaciones básicas
             if (!historia.idPaciente) {
                 res.status(400).json({
                     success: false,
@@ -115,6 +121,7 @@ class HistoriaClinicaController {
                 return;
             }
             const idHistoria = await historiaClinica_model_1.default.crear(historia);
+            // Obtener la historia clínica recién creada para devolver todos los datos
             const historiaCreada = await historiaClinica_model_1.default.obtenerPorId(idHistoria);
             res.status(201).json({
                 success: true,
@@ -130,10 +137,12 @@ class HistoriaClinicaController {
             });
         }
     }
+    // Actualizar una historia clínica
     static async actualizar(req, res) {
         try {
             const { id } = req.params;
             const historia = req.body;
+            // Verificar que la historia existe
             const historiaExistente = await historiaClinica_model_1.default.obtenerPorId(Number(id));
             if (!historiaExistente) {
                 res.status(404).json({
@@ -157,9 +166,11 @@ class HistoriaClinicaController {
             });
         }
     }
+    // Eliminar una historia clínica
     static async eliminar(req, res) {
         try {
             const { id } = req.params;
+            // Verificar que la historia existe
             const historiaExistente = await historiaClinica_model_1.default.obtenerPorId(Number(id));
             if (!historiaExistente) {
                 res.status(404).json({
@@ -182,6 +193,7 @@ class HistoriaClinicaController {
             });
         }
     }
+    // Nuevo método para obtener el historial completo de un paciente
     static async obtenerHistorialCompleto(req, res) {
         try {
             const { idPaciente } = req.params;
@@ -216,4 +228,3 @@ class HistoriaClinicaController {
     }
 }
 exports.default = HistoriaClinicaController;
-//# sourceMappingURL=historiaClinica.controller.js.map

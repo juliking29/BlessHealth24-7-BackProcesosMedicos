@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const facturaCita_model_1 = __importDefault(require("../../Model/FacturaCita/facturaCita.model"));
 class FacturaCitaController {
+    // Generar factura desde una cita
     static async generarFactura(req, res) {
         try {
             const { idCita } = req.params;
@@ -37,6 +38,7 @@ class FacturaCitaController {
             });
         }
     }
+    // Obtener facturas por cédula de paciente
     static async obtenerFacturasPorCedula(req, res) {
         try {
             const { cedula } = req.params;
@@ -65,6 +67,7 @@ class FacturaCitaController {
     static async actualizarCita(req, res) {
         try {
             const { idCita } = req.params;
+            // Validar que idCita existe y es un número válido
             if (!idCita || isNaN(parseInt(idCita))) {
                 res.status(400).json({
                     success: false,
@@ -90,6 +93,7 @@ class FacturaCitaController {
             });
         }
     }
+    // Obtener detalles de una cita
     static async obtenerDetallesCita(req, res) {
         try {
             const { idCita } = req.params;
@@ -115,6 +119,8 @@ class FacturaCitaController {
             });
         }
     }
+    // Añadir estos nuevos métodos a la clase FacturaController
+    // Eliminar factura
     static async eliminarFactura(req, res) {
         try {
             const { id } = req.params;
@@ -149,6 +155,7 @@ class FacturaCitaController {
     static async actualizarFactura(req, res) {
         try {
             const { id } = req.params;
+            // Validar que el ID existe y es un número válido
             if (!id || isNaN(parseInt(id))) {
                 res.status(400).json({
                     success: false,
@@ -183,4 +190,3 @@ class FacturaCitaController {
     }
 }
 exports.default = FacturaCitaController;
-//# sourceMappingURL=facturaCita.controller.js.map

@@ -1,7 +1,9 @@
 "use strict";
+// Model/Autorizacion/autorizacion.model.ts
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("../../config/database");
 class AutorizacionModel {
+    // Crear una nueva autorización
     static async crear(autorizacion) {
         const query = `
             INSERT INTO CLINICA_PI3.AUTORIZACIONES 
@@ -16,6 +18,7 @@ class AutorizacionModel {
         ]);
         return result.insertId;
     }
+    // Obtener todas las autorizaciones
     static async obtenerTodas() {
         const query = `
             SELECT 
@@ -35,6 +38,7 @@ class AutorizacionModel {
         const [rows] = await database_1.pool.query(query);
         return rows;
     }
+    // Obtener autorizaciones por orden médica
     static async obtenerPorOrdenMedica(idOrdenMedica) {
         const query = `
             SELECT 
@@ -55,6 +59,7 @@ class AutorizacionModel {
         const [rows] = await database_1.pool.query(query, [idOrdenMedica]);
         return rows;
     }
+    // Obtener una autorización por ID
     static async obtenerPorId(id) {
         const query = `
             SELECT 
@@ -77,6 +82,7 @@ class AutorizacionModel {
         }
         return null;
     }
+    // Actualizar una autorización
     static async actualizar(id, autorizacion) {
         const campos = [];
         const valores = [];
@@ -95,6 +101,7 @@ class AutorizacionModel {
         const query = `UPDATE CLINICA_PI3.AUTORIZACIONES SET ${campos.join(', ')} WHERE idAutorizacion = ?`;
         await database_1.pool.query(query, valores);
     }
+    // Eliminar una autorización
     static async eliminar(id) {
         await database_1.pool.query('DELETE FROM CLINICA_PI3.AUTORIZACIONES WHERE idAutorizacion = ?', [id]);
     }
@@ -181,4 +188,3 @@ class AutorizacionModel {
     }
 }
 exports.default = AutorizacionModel;
-//# sourceMappingURL=autorizacion.model.js.map

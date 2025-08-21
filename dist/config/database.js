@@ -16,6 +16,7 @@ exports.pool = (0, promise_1.createPool)({
     waitForConnections: true,
     connectionLimit: Number(process.env["MYSQL_CONNECTION_LIMIT"]) || 10,
 });
+// Probar conexión
 (async () => {
     try {
         const connection = await exports.pool.getConnection();
@@ -26,4 +27,3 @@ exports.pool = (0, promise_1.createPool)({
         console.error("❌ Error al conectar a MySQL:", error);
     }
 })();
-//# sourceMappingURL=database.js.map

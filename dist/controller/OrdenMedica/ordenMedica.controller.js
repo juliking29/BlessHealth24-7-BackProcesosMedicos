@@ -1,4 +1,5 @@
 "use strict";
+// controller/OrdenMedica/ordenMedica.controller.ts
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -30,6 +31,7 @@ class OrdenMedicaController {
             });
         }
     }
+    // Crear una nueva orden médica
     static async crear(req, res) {
         try {
             const ordenMedica = req.body;
@@ -55,6 +57,7 @@ class OrdenMedicaController {
             });
         }
     }
+    // Obtener todas las órdenes médicas
     static async obtenerTodas(_req, res) {
         try {
             const ordenes = await ordenMedica_model_1.default.obtenerTodas();
@@ -72,6 +75,7 @@ class OrdenMedicaController {
             });
         }
     }
+    // Obtener órdenes por paciente
     static async obtenerPorPaciente(req, res) {
         try {
             const { idPaciente } = req.params;
@@ -97,6 +101,7 @@ class OrdenMedicaController {
             });
         }
     }
+    // Obtener una orden por ID
     static async obtenerPorId(req, res) {
         try {
             const { id } = req.params;
@@ -122,6 +127,7 @@ class OrdenMedicaController {
             });
         }
     }
+    // Actualizar una orden médica
     static async actualizar(req, res) {
         try {
             const { id } = req.params;
@@ -150,6 +156,7 @@ class OrdenMedicaController {
             });
         }
     }
+    // Eliminar una orden médica
     static async eliminar(req, res) {
         try {
             const { id } = req.params;
@@ -177,4 +184,3 @@ class OrdenMedicaController {
     }
 }
 exports.default = OrdenMedicaController;
-//# sourceMappingURL=ordenMedica.controller.js.map

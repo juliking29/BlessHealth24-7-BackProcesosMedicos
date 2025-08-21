@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const usuario_model_1 = __importDefault(require("../../Model/Uusario/usuario.model"));
 const node_inspector_1 = require("node:inspector");
 class UsuarioController {
+    // Método para obtener todos los usuarios
+    // Method to get all users
     static async obtenerTodos(_req, res) {
         try {
             const usuarios = await usuario_model_1.default.obtenerTodos();
@@ -23,6 +25,8 @@ class UsuarioController {
             });
         }
     }
+    // Método para obtener usuarios por rol
+    // Method to get users by role
     static async obtenerPorRol(req, res) {
         try {
             const { idRol } = req.params;
@@ -48,6 +52,8 @@ class UsuarioController {
             });
         }
     }
+    // Método para obtener un usuario por su ID
+    // Method to get a user by ID
     static async obtenerPorId(req, res) {
         try {
             const { id } = req.params;
@@ -73,6 +79,8 @@ class UsuarioController {
             });
         }
     }
+    // Método para obtener un usuario por número de documento
+    // Method to get a user by document number
     static async obtenerPorDocumento(req, res) {
         try {
             const { numeroDocumento } = req.params;
@@ -105,6 +113,8 @@ class UsuarioController {
             });
         }
     }
+    // Método para obtener un usuario por email
+    // Method to get a user by email
     static async obtenerPorEmail(req, res) {
         try {
             const { email } = req.params;
@@ -137,9 +147,12 @@ class UsuarioController {
             });
         }
     }
+    // Método para crear un nuevo usuario
+    // Method to create a new user
     static async crear(req, res) {
         try {
             const usuario = req.body;
+            // Validaciones básicas
             if (!usuario.numeroDocumento || !usuario.nombreUsuario || !usuario.apellidoUsuario ||
                 !usuario.emailUsuario || !usuario.telefonoUsuario || !usuario.direccionUsuario ||
                 !usuario.idRol || !usuario.tipoDocumento) {
@@ -149,6 +162,7 @@ class UsuarioController {
                 });
                 return;
             }
+            // Verificar si ya existe un usuario con el mismo documento o email
             const usuarioExistentePorDoc = await usuario_model_1.default.obtenerPorDocumento(usuario.numeroDocumento);
             if (usuarioExistentePorDoc) {
                 res.status(409).json({
@@ -180,6 +194,9 @@ class UsuarioController {
             });
         }
     }
+    // Método para actualizar un usuario por su ID
+    // Method to update a user by ID
+    // Método para actualizar un usuario por su ID
     static async actualizar(req, res) {
         try {
             const { documento } = req.params;
@@ -188,6 +205,7 @@ class UsuarioController {
             node_inspector_1.console.log("========= ACTUALIZAR USUARIO =========");
             node_inspector_1.console.log("documento recibido en params:", documento);
             node_inspector_1.console.log("documento como string:", documentoStr);
+            // Verificar que el usuario existe
             const usuarioExistente = await usuario_model_1.default.obtenerPorDocumento(documentoStr);
             if (!usuarioExistente) {
                 res.status(404).json({
@@ -196,6 +214,7 @@ class UsuarioController {
                 });
                 return;
             }
+            // Validar email único si se está cambiando
             if (usuario.emailUsuario && usuario.emailUsuario !== usuarioExistente.emailUsuario) {
                 const usuarioConMismoEmail = await usuario_model_1.default.obtenerPorEmail(usuario.emailUsuario);
                 if (usuarioConMismoEmail && usuarioConMismoEmail.idUsuario !== usuarioExistente.idUsuario) {
@@ -206,6 +225,7 @@ class UsuarioController {
                     return;
                 }
             }
+            // Validar documento único si se está cambiando
             if (usuario.numeroDocumento && usuario.numeroDocumento !== usuarioExistente.numeroDocumento) {
                 const usuarioConMismoDoc = await usuario_model_1.default.obtenerPorDocumento(usuario.numeroDocumento);
                 if (usuarioConMismoDoc && usuarioConMismoDoc.idUsuario !== usuarioExistente.idUsuario) {
@@ -216,6 +236,7 @@ class UsuarioController {
                     return;
                 }
             }
+            // Actualizar usando el ID del usuario existente
             const usuarioActualizado = await usuario_model_1.default.actualizar(usuarioExistente.idUsuario, usuario);
             res.json({
                 success: true,
@@ -231,10 +252,12 @@ class UsuarioController {
             });
         }
     }
+    // Método para eliminar (desactivar) un usuario por su número de documento
     static async eliminar(req, res) {
         try {
             const { documento } = req.params;
             const documentoStr = String(documento);
+            // Verificar que el usuario existe
             const usuarioExistente = await usuario_model_1.default.obtenerPorDocumento(documentoStr);
             if (!usuarioExistente) {
                 res.status(404).json({
@@ -243,7 +266,7 @@ class UsuarioController {
                 });
                 return;
             }
-            await usuario_model_1.default.eliminar(usuarioExistente.idUsuario);
+            await usuario_model_1.default.eliminar(usuarioExistente.idUsuario); // aún se elimina por ID internamente
             res.json({
                 success: true,
                 mensaje: 'Usuario eliminado correctamente'
@@ -257,10 +280,12 @@ class UsuarioController {
             });
         }
     }
+    // Método para eliminar físicamente un usuario por su número de documento
     static async eliminarFisicamente(req, res) {
         try {
             const { documento } = req.params;
             const documentoStr = String(documento);
+            // Verificar que el usuario existe
             const usuarioExistente = await usuario_model_1.default.obtenerPorDocumento(documentoStr);
             if (!usuarioExistente) {
                 res.status(404).json({
@@ -269,7 +294,7 @@ class UsuarioController {
                 });
                 return;
             }
-            await usuario_model_1.default.eliminarFisicamente(usuarioExistente.idUsuario);
+            await usuario_model_1.default.eliminarFisicamente(usuarioExistente.idUsuario); // aún se usa ID internamente
             res.json({
                 success: true,
                 mensaje: 'Usuario eliminado físicamente'
@@ -283,6 +308,8 @@ class UsuarioController {
             });
         }
     }
+    // Método para obtener datos auxiliares (tipos de documento, roles, sedes)
+    // Method to get auxiliary data (document types, roles, locations)
     static async obtenerDatosAuxiliares(_req, res) {
         try {
             const [tiposDocumento, roles, sedes] = await Promise.all([
@@ -310,4 +337,3 @@ class UsuarioController {
     }
 }
 exports.default = UsuarioController;
-//# sourceMappingURL=usuario.controller.js.map

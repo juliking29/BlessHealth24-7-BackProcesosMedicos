@@ -1,10 +1,12 @@
 "use strict";
+// controller/Cita/cita.controller.ts
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const cita_model_1 = __importDefault(require("../../Model/Citas/cita.model"));
 class CitaController {
+    // Disponibilidad por hora específica
     static async obtenerMedicosDisponiblesPorEspecialidad(req, res) {
         try {
             const filtros = req.body;
@@ -30,6 +32,7 @@ class CitaController {
             });
         }
     }
+    // Disponibilidad por rango de fechas
     static async obtenerMedicosDisponiblesPorSedeEspecialidad(req, res) {
         try {
             const filtros = req.body;
@@ -55,6 +58,7 @@ class CitaController {
             });
         }
     }
+    // Horarios disponibles en un día
     static async obtenerMedicosConHorariosDisponibles(req, res) {
         try {
             const filtros = req.body;
@@ -80,6 +84,7 @@ class CitaController {
             });
         }
     }
+    // Obtener todas las citas
     static async obtenerTodos(_req, res) {
         try {
             const citas = await cita_model_1.default.obtenerTodos();
@@ -97,6 +102,7 @@ class CitaController {
             });
         }
     }
+    // Obtener una cita por su ID
     static async obtenerPorId(req, res) {
         try {
             const { id } = req.params;
@@ -122,9 +128,11 @@ class CitaController {
             });
         }
     }
+    // Crear una nueva cita
     static async crear(req, res) {
         try {
             const cita = req.body;
+            // Validaciones básicas
             if (!cita.idPaciente || !cita.idServicio || !cita.idSede || !cita.fechaHora || !cita.motivo) {
                 res.status(400).json({
                     success: false,
@@ -147,10 +155,12 @@ class CitaController {
             });
         }
     }
+    // Actualizar una cita
     static async actualizar(req, res) {
         try {
             const { id } = req.params;
             const cita = req.body;
+            // Verificar que la cita existe
             const citaExistente = await cita_model_1.default.obtenerPorId(Number(id));
             if (!citaExistente) {
                 res.status(404).json({
@@ -174,6 +184,7 @@ class CitaController {
             });
         }
     }
+    // Cancelar una cita
     static async cancelar(req, res) {
         try {
             const { id } = req.params;
@@ -185,6 +196,7 @@ class CitaController {
                 });
                 return;
             }
+            // Verificar que la cita existe
             const citaExistente = await cita_model_1.default.obtenerPorId(Number(id));
             if (!citaExistente) {
                 res.status(404).json({
@@ -207,9 +219,11 @@ class CitaController {
             });
         }
     }
+    // Eliminar una cita
     static async eliminar(req, res) {
         try {
             const { id } = req.params;
+            // Verificar que la cita existe
             const citaExistente = await cita_model_1.default.obtenerPorId(Number(id));
             if (!citaExistente) {
                 res.status(404).json({
@@ -232,9 +246,11 @@ class CitaController {
             });
         }
     }
+    // Finalizar una cita
     static async finalizar(req, res) {
         try {
             const { id } = req.params;
+            // Verificar que la cita existe
             const citaExistente = await cita_model_1.default.obtenerPorId(Number(id));
             if (!citaExistente) {
                 res.status(404).json({
@@ -267,6 +283,7 @@ class CitaController {
             });
         }
     }
+    // Obtener todos los médicos con sus especialidades
     static async obtenerTodosMedicosConEspecialidades(_req, res) {
         try {
             const medicos = await cita_model_1.default.obtenerTodosMedicosConEspecialidades();
@@ -284,6 +301,7 @@ class CitaController {
             });
         }
     }
+    // Obtener citas por paciente
     static async obtenerCitasPorPaciente(req, res) {
         try {
             const { idPaciente } = req.params;
@@ -310,6 +328,7 @@ class CitaController {
             });
         }
     }
+    // Obtener citas por doctor
     static async obtenerCitasPorDoctor(req, res) {
         try {
             const { idMedico } = req.params;
@@ -336,6 +355,7 @@ class CitaController {
             });
         }
     }
+    // Obtener todas las sedes
     static async obtenerSedes(_req, res) {
         try {
             const sedes = await cita_model_1.default.obtenerSedes();
@@ -353,6 +373,7 @@ class CitaController {
             });
         }
     }
+    // Obtener todas las especialidades
     static async obtenerEspecialidades(_req, res) {
         try {
             const especialidades = await cita_model_1.default.obtenerEspecialidades();
@@ -370,6 +391,7 @@ class CitaController {
             });
         }
     }
+    // Obtener todos los servicios
     static async obtenerServicios(_req, res) {
         try {
             const servicios = await cita_model_1.default.obtenerServicios();
@@ -387,6 +409,7 @@ class CitaController {
             });
         }
     }
+    // Buscar citas por paciente (con cédula) - POST
     static async buscarCitasPorPaciente(req, res) {
         try {
             const { cedula } = req.params;
@@ -413,6 +436,7 @@ class CitaController {
             });
         }
     }
+    // Buscar citas por médico (con cédula) - POST
     static async buscarCitasPorMedico(req, res) {
         try {
             const { cedula } = req.params;
@@ -441,4 +465,3 @@ class CitaController {
     }
 }
 exports.default = CitaController;
-//# sourceMappingURL=cita.controller.js.map

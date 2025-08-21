@@ -1,7 +1,9 @@
 "use strict";
+// Model/OrdenMedica/ordenMedica.model.ts
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("../../config/database");
 class OrdenMedicaModel {
+    // Crear una nueva orden médica
     static async crear(ordenMedica) {
         const query = `
             INSERT INTO CLINICA_PI3.ORDENES_MEDICAS 
@@ -18,6 +20,7 @@ class OrdenMedicaModel {
         ]);
         return result.insertId;
     }
+    // Obtener todas las órdenes médicas
     static async obtenerTodas() {
         const query = `
             SELECT 
@@ -37,6 +40,7 @@ class OrdenMedicaModel {
         const [rows] = await database_1.pool.query(query);
         return rows;
     }
+    // Obtener órdenes por paciente
     static async obtenerPorPaciente(idPaciente) {
         const query = `
             SELECT 
@@ -57,6 +61,7 @@ class OrdenMedicaModel {
         const [rows] = await database_1.pool.query(query, [idPaciente]);
         return rows;
     }
+    // Obtener una orden por ID
     static async obtenerPorId(id) {
         const query = `
             SELECT 
@@ -79,6 +84,7 @@ class OrdenMedicaModel {
         }
         return null;
     }
+    // Actualizar una orden médica
     static async actualizar(id, ordenMedica) {
         const campos = [];
         const valores = [];
@@ -109,6 +115,7 @@ class OrdenMedicaModel {
         const query = `UPDATE CLINICA_PI3.ORDENES_MEDICAS SET ${campos.join(', ')} WHERE idOrdenMedica = ?`;
         await database_1.pool.query(query, valores);
     }
+    // Eliminar una orden médica
     static async eliminar(id) {
         await database_1.pool.query('DELETE FROM CLINICA_PI3.ORDENES_MEDICAS WHERE idOrdenMedica = ?', [id]);
     }
@@ -179,4 +186,3 @@ class OrdenMedicaModel {
     }
 }
 exports.default = OrdenMedicaModel;
-//# sourceMappingURL=ordenMedica.model.js.map
