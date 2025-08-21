@@ -123,28 +123,26 @@ export default class CitaModel {
         return result[0][0].idCita;
     }
 
-    // Actualizar una cita
     public static async actualizar(id: number, cita: Partial<Cita>): Promise<CitaCompleta> {
-        const query = `
-            CALL CLINICA_PI3.ActualizarCita(?, ?, ?, ?, ?)
-        `;
+    const query = `
+        CALL CLINICA_PI3.ActualizarCita(?, ?, ?, ?, ?)
+    `;
 
-        await pool.query(query, [
-            id,
-            cita.fechaHora,
-            cita.idMedico || null,
-            cita.motivo || '',
-            cita.sintomas || ''
-        ]);
+    await pool.query(query, [
+        id,                     // p_idCita
+        cita.idMedico || null,  // p_idMedico
+        cita.fechaHora,         // p_fechaHora
+        cita.estadoCita || '',  // p_estadoCita ← ¡Agregar este campo!
+        cita.observaciones || '' // p_observaciones ← Y este también
+    ]);
 
-        // Obtener y devolver la cita actualizada
-        const citaActualizada = await this.obtenerPorId(id);
-        if (!citaActualizada) {
-            throw new Error('Cita no encontrada después de actualización');
-        }
-        
-        return citaActualizada;
+    const citaActualizada = await this.obtenerPorId(id);
+    if (!citaActualizada) {
+        throw new Error('Cita no encontrada después de actualización');
     }
+    
+    return citaActualizada;
+}
 
     // Cancelar una cita
     public static async cancelar(id: number, motivoCancelacion: string): Promise<void> {

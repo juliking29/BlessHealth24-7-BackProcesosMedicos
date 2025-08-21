@@ -1,12 +1,9 @@
-// Model/HistoriaClinica/historiaClinica.model.ts
-
 import { pool } from '../../config/database';
 import HistoriaClinica from '../../interfaces/HistoriaClinica/historiaClinica.interface';
 
 export default class HistoriaClinicaModel {
 
-     
-        // Obtener historias clínicas por número de documento del paciente
+    // Obtener historias clínicas por número de documento del paciente
     public static async obtenerPorDocumentoPaciente(numeroDocumento: string): Promise<HistoriaClinica[]> {
         const query = `
             SELECT 
@@ -85,8 +82,13 @@ export default class HistoriaClinicaModel {
         const query = `
             INSERT INTO CLINICA_PI3.HISTORIAS_CLINICAS 
             (idPaciente, tipoSangre, alergias, enfermedadesCronicas, 
-             medicamentos, antecedentesFamiliares, observaciones)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+             medicamentos, antecedentesFamiliares, observaciones,
+             actividadFisica, alimentacionDiaria, suenio, sexualidad,
+             viajes, alcohol, sustanciasPsicoactivas, antecedentesPersonales,
+             diagnosticosPrincipales, diagnosticosDiferenciales, planManejo,
+             conductaTratamiento, remisiones, examenesSolicitados,
+             educacionPaciente, epicrisis)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const [result]: any = await pool.query(query, [
@@ -96,7 +98,24 @@ export default class HistoriaClinicaModel {
             historiaClinica.enfermedadesCronicas || null,
             historiaClinica.medicamentos || null,
             historiaClinica.antecedentesFamiliares || null,
-            historiaClinica.observaciones || null
+            historiaClinica.observaciones || null,
+            // Nuevos campos
+            historiaClinica.actividadFisica || null,
+            historiaClinica.alimentacionDiaria || null,
+            historiaClinica.suenio || null,
+            historiaClinica.sexualidad || null,
+            historiaClinica.viajes || null,
+            historiaClinica.alcohol || null,
+            historiaClinica.sustanciasPsicoactivas || null,
+            historiaClinica.antecedentesPersonales || null,
+            historiaClinica.diagnosticosPrincipales || null,
+            historiaClinica.diagnosticosDiferenciales || null,
+            historiaClinica.planManejo || null,
+            historiaClinica.conductaTratamiento || null,
+            historiaClinica.remisiones || null,
+            historiaClinica.examenesSolicitados || null,
+            historiaClinica.educacionPaciente || null,
+            historiaClinica.epicrisis || null
         ]);
 
         return result.insertId;
@@ -108,6 +127,7 @@ export default class HistoriaClinicaModel {
         const campos = [];
         const valores = [];
 
+        // Campos originales
         if (historiaClinica.tipoSangre !== undefined) {
             campos.push('tipoSangre = ?');
             valores.push(historiaClinica.tipoSangre);
@@ -131,6 +151,72 @@ export default class HistoriaClinicaModel {
         if (historiaClinica.observaciones !== undefined) {
             campos.push('observaciones = ?');
             valores.push(historiaClinica.observaciones);
+        }
+
+        // Nuevos campos
+        if (historiaClinica.actividadFisica !== undefined) {
+            campos.push('actividadFisica = ?');
+            valores.push(historiaClinica.actividadFisica);
+        }
+        if (historiaClinica.alimentacionDiaria !== undefined) {
+            campos.push('alimentacionDiaria = ?');
+            valores.push(historiaClinica.alimentacionDiaria);
+        }
+        if (historiaClinica.suenio !== undefined) {
+            campos.push('suenio = ?');
+            valores.push(historiaClinica.suenio);
+        }
+        if (historiaClinica.sexualidad !== undefined) {
+            campos.push('sexualidad = ?');
+            valores.push(historiaClinica.sexualidad);
+        }
+        if (historiaClinica.viajes !== undefined) {
+            campos.push('viajes = ?');
+            valores.push(historiaClinica.viajes);
+        }
+        if (historiaClinica.alcohol !== undefined) {
+            campos.push('alcohol = ?');
+            valores.push(historiaClinica.alcohol);
+        }
+        if (historiaClinica.sustanciasPsicoactivas !== undefined) {
+            campos.push('sustanciasPsicoactivas = ?');
+            valores.push(historiaClinica.sustanciasPsicoactivas);
+        }
+        if (historiaClinica.antecedentesPersonales !== undefined) {
+            campos.push('antecedentesPersonales = ?');
+            valores.push(historiaClinica.antecedentesPersonales);
+        }
+        if (historiaClinica.diagnosticosPrincipales !== undefined) {
+            campos.push('diagnosticosPrincipales = ?');
+            valores.push(historiaClinica.diagnosticosPrincipales);
+        }
+        if (historiaClinica.diagnosticosDiferenciales !== undefined) {
+            campos.push('diagnosticosDiferenciales = ?');
+            valores.push(historiaClinica.diagnosticosDiferenciales);
+        }
+        if (historiaClinica.planManejo !== undefined) {
+            campos.push('planManejo = ?');
+            valores.push(historiaClinica.planManejo);
+        }
+        if (historiaClinica.conductaTratamiento !== undefined) {
+            campos.push('conductaTratamiento = ?');
+            valores.push(historiaClinica.conductaTratamiento);
+        }
+        if (historiaClinica.remisiones !== undefined) {
+            campos.push('remisiones = ?');
+            valores.push(historiaClinica.remisiones);
+        }
+        if (historiaClinica.examenesSolicitados !== undefined) {
+            campos.push('examenesSolicitados = ?');
+            valores.push(historiaClinica.examenesSolicitados);
+        }
+        if (historiaClinica.educacionPaciente !== undefined) {
+            campos.push('educacionPaciente = ?');
+            valores.push(historiaClinica.educacionPaciente);
+        }
+        if (historiaClinica.epicrisis !== undefined) {
+            campos.push('epicrisis = ?');
+            valores.push(historiaClinica.epicrisis);
         }
 
         // Siempre actualizamos la fecha de última actualización
