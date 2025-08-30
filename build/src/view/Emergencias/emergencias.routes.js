@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const emergencia_controller_1 = __importDefault(require("../../controller/Emergencias/emergencia.controller"));
+const router = (0, express_1.Router)();
+router.get('/emergencias', emergencia_controller_1.default.obtenerTodos);
+router.get('/emergencias/:id', emergencia_controller_1.default.obtenerPorId);
+router.post('/emergencias', emergencia_controller_1.default.crear);
+router.put('/emergencias/:id', emergencia_controller_1.default.actualizar);
+router.delete('/emergencias/:id', emergencia_controller_1.default.eliminar);
+router.get('/emergencias/sede/:idSede', emergencia_controller_1.default.obtenerPorSede);
+router.get('/emergencias/tipo/:idTipo', emergencia_controller_1.default.obtenerPorTipo);
+router.get('/emergencias/estadisticas/estado', emergencia_controller_1.default.estadisticasPorEstado);
+router.patch('/emergencias/:id/asignar-medico', emergencia_controller_1.default.asignarMedico);
+router.patch('/emergencias/:id/asignar-paciente', emergencia_controller_1.default.asignarPaciente);
+router.patch('/emergencias/:id/marcar-atencion', emergencia_controller_1.default.marcarAtencion);
+exports.default = router;
