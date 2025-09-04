@@ -220,7 +220,7 @@ export default class AuthController {
       }
       
       // Obtener información completa del usuario desde la base de datos
-      const usuarioCompleto = await AuthModel.obtenerPorId(user.idUsuario);
+      const usuarioCompleto = await AuthModel.obtenerUsuarioPorToken(user.idUsuario);
       
       if (!usuarioCompleto) {
         res.status(404).json({
