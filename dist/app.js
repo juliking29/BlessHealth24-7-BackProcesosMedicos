@@ -45,6 +45,7 @@ const ordenMedica_routes_1 = __importDefault(require("./view/OrdenMedica/ordenMe
 const registroConsulta_routes_1 = __importDefault(require("./view/RegistroConsulta/registroConsulta.routes"));
 const facturaCita_routes_1 = __importDefault(require("./view/FacturaCita/facturaCita.routes"));
 const servicio_routes_1 = __importDefault(require("./view/Servicio/servicio.routes"));
+const emergencias_routes_1 = __importDefault(require("./view/Emergencias/emergencias.routes"));
 // Configurar rutas para la API - CLÍNICA PI3
 app.use('/api', usuario_routes_1.default);
 app.use('/api', medico_routes_1.default);
@@ -55,6 +56,7 @@ app.use('/api', autorizacion_routes_1.default);
 app.use('/api', registroConsulta_routes_1.default);
 app.use('/api', servicio_routes_1.default);
 app.use('/api', facturaCita_routes_1.default);
+app.use('/api', emergencias_routes_1.default);
 // Ruta de salud para verificar que el servidor funciona
 app.get('/health', (_req, res) => {
     res.status(200).json({
