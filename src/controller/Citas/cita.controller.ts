@@ -7,8 +7,6 @@ import CitaModel from '../../Model/Citas/cita.model';
 
 export default class CitaController {
 
-
-
      // Disponibilidad por hora específica
     public static async obtenerMedicosDisponiblesPorEspecialidad(req: Request, res: Response): Promise<void> {
         try {
