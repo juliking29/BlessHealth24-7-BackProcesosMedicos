@@ -50,7 +50,7 @@ import facturaCitaRoutes from './view/FacturaCita/facturaCita.routes';
 import servicioRoutes from './view/Servicio/servicio.routes';
 import emergenciasRoutes from './view/Emergencias/emergencias.routes';
 import authRoutes from './view/Auth/auth.routes';
-
+import estadisticasRoutes from './view/Estadisticas/estadisticas.routes';
 // Configurar rutas para la API - CLÍNICA PI3
 app.use('/api', usuarioRoutes);
 app.use('/api', medicoRoutes);
@@ -63,7 +63,7 @@ app.use('/api', servicioRoutes);
 app.use('/api', facturaCitaRoutes);
 app.use('/api', emergenciasRoutes);
 app.use('/api', authRoutes);
-
+app.use('/api', estadisticasRoutes); 
 
 // Ruta de salud para verificar que el servidor funciona
 app.get('/health', (_req, res) => {
