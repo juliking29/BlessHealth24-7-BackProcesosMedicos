@@ -114,3 +114,13 @@ export interface ActualizarFacturaResult {
         fechaVencimiento?: string;
     };
 }
+// Interface para el nuevo endpoint de eliminar factura por ID
+export interface EliminarFacturaPorIdParams {
+    idFactura: number;
+}
+
+export interface EliminarFacturaPorIdResult {
+    success: boolean;
+    message: string;
+    facturasEliminadas?: number;
+}

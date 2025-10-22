@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import FacturaCitaModel from '../../Model/FacturaCita/facturaCita.model';
 import { ActualizarCitaParams, ActualizarFacturaParams } from '../../interfaces/FacturaCita/facturaCita.interface';
 
-
-
 export default class FacturaCitaController {
     // Generar factura desde una cita
     public static async generarFactura(req: Request, res: Response): Promise<void> {
@@ -71,38 +69,39 @@ export default class FacturaCitaController {
         }
     }
 
-   public static async actualizarCita(req: Request, res: Response): Promise<void> {
-    try {
-        const { idCita } = req.params;
-        
-        // Validar que idCita existe y es un número válido
-        if (!idCita || isNaN(parseInt(idCita))) {
-            res.status(400).json({ 
-                success: false,
-                message: 'El ID de la cita es requerido y debe ser un número válido' 
+    public static async actualizarCita(req: Request, res: Response): Promise<void> {
+        try {
+            const { idCita } = req.params;
+            
+            // Validar que idCita existe y es un número válido
+            if (!idCita || isNaN(parseInt(idCita))) {
+                res.status(400).json({ 
+                    success: false,
+                    message: 'El ID de la cita es requerido y debe ser un número válido' 
+                });
+                return;
+            }
+
+            const params: ActualizarCitaParams = {
+                idCita: parseInt(idCita),
+                ...req.body
+            };
+
+            const mensaje = await FacturaCitaModel.actualizarCita(params);
+            
+            res.json({
+                success: true,
+                message: mensaje
             });
-            return;
+        } catch (error) {
+            res.status(500).json({ 
+                success: false,
+                message: 'Error al actualizar cita',
+                error: error instanceof Error ? error.message : error
+            });
         }
-
-        const params: ActualizarCitaParams = {
-            idCita: parseInt(idCita),
-            ...req.body
-        };
-
-        const mensaje = await FacturaCitaModel.actualizarCita(params);
-        
-        res.json({
-            success: true,
-            message: mensaje
-        });
-    } catch (error) {
-        res.status(500).json({ 
-            success: false,
-            message: 'Error al actualizar cita',
-            error: error instanceof Error ? error.message : error
-        });
     }
-}
+
     // Obtener detalles de una cita
     public static async obtenerDetallesCita(req: Request, res: Response): Promise<void> {
         try {
@@ -132,84 +131,117 @@ export default class FacturaCitaController {
         }
     }
 
-   // Añadir estos nuevos métodos a la clase FacturaController
+    // Eliminar factura
+    public static async eliminarFactura(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            
+            if (!id || isNaN(parseInt(id))) {
+                res.status(400).json({ 
+                    success: false,
+                    message: 'El ID de la factura es requerido y debe ser un número válido' 
+                });
+                return;
+            }
 
-// Eliminar factura
-public static async eliminarFactura(req: Request, res: Response): Promise<void> {
-    try {
-        const { id } = req.params;
-        
-        if (!id || isNaN(parseInt(id))) {
-            res.status(400).json({ 
-                success: false,
-                message: 'El ID de la factura es requerido y debe ser un número válido' 
-            });
-            return;
-        }
+            const resultado = await FacturaCitaModel.eliminarFactura(parseInt(id));
+            
+            if (resultado.status === 'error') {
+                res.status(404).json({
+                    success: false,
+                    ...resultado
+                });
+                return;
+            }
 
-        const resultado = await FacturaCitaModel.eliminarFactura(parseInt(id));
-        
-        if (resultado.status === 'error') {
-            res.status(404).json({
-                success: false,
+            res.json({
+                success: true,
                 ...resultado
             });
-            return;
-        }
-
-        res.json({
-            success: true,
-            ...resultado
-        });
-    } catch (error) {
-        res.status(500).json({ 
-            success: false,
-            message: 'Error al eliminar factura',
-            error: error instanceof Error ? error.message : error
-        });
-    }
-}
-public static async actualizarFactura(req: Request, res: Response): Promise<void> {
-    try {
-        const { id } = req.params;
-        
-        // Validar que el ID existe y es un número válido
-        if (!id || isNaN(parseInt(id))) {
-            res.status(400).json({ 
+        } catch (error) {
+            res.status(500).json({ 
                 success: false,
-                message: 'El ID de la factura es requerido y debe ser un número válido' 
+                message: 'Error al eliminar factura',
+                error: error instanceof Error ? error.message : error
             });
-            return;
         }
+    }
 
-        const params: ActualizarFacturaParams = {
-            idFactura: parseInt(id),
-            ...req.body
-        };
+    public static async actualizarFactura(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            
+            // Validar que el ID existe y es un número válido
+            if (!id || isNaN(parseInt(id))) {
+                res.status(400).json({ 
+                    success: false,
+                    message: 'El ID de la factura es requerido y debe ser un número válido' 
+                });
+                return;
+            }
 
-        const resultado = await FacturaCitaModel.actualizarFactura(params);
-        
-        if (resultado.status === 'error') {
-            res.status(404).json({
-                success: false,
+            const params: ActualizarFacturaParams = {
+                idFactura: parseInt(id),
+                ...req.body
+            };
+
+            const resultado = await FacturaCitaModel.actualizarFactura(params);
+            
+            if (resultado.status === 'error') {
+                res.status(404).json({
+                    success: false,
+                    ...resultado
+                });
+                return;
+            }
+
+            res.json({
+                success: resultado.status === 'success',
                 ...resultado
             });
-            return;
+        } catch (error) {
+            res.status(500).json({ 
+                success: false,
+                message: 'Error al actualizar factura',
+                error: error instanceof Error ? error.message : error
+            });
         }
-
-        res.json({
-            success: resultado.status === 'success',
-            ...resultado
-        });
-    } catch (error) {
-        res.status(500).json({ 
-            success: false,
-            message: 'Error al actualizar factura',
-            error: error instanceof Error ? error.message : error
-        });
     }
-}
 
-    
+    // NUEVO MÉTODO: Eliminar factura por ID usando el procedimiento almacenado
+    public static async eliminarFacturaPorId(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            
+            if (!id || isNaN(parseInt(id))) {
+                res.status(400).json({ 
+                    success: false,
+                    message: 'El ID de la factura es requerido y debe ser un número válido' 
+                });
+                return;
+            }
 
+            const resultado = await FacturaCitaModel.eliminarFacturaPorId(parseInt(id));
+            
+            if (!resultado.success) {
+                res.status(404).json({
+                    success: false,
+                    message: resultado.message
+                });
+                return;
+            }
+
+            res.json({
+                success: true,
+                message: resultado.message,
+                facturasEliminadas: resultado.facturasEliminadas
+            });
+        } catch (error) {
+            res.status(500).json({ 
+                success: false,
+                message: 'Error al eliminar factura por ID',
+                error: error instanceof Error ? error.message : error
+            });
+        }
+    }
 }

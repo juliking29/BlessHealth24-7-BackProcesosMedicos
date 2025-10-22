@@ -15,11 +15,13 @@ router.put('/citas/actualizar/:idCita', FacturaCitaController.actualizarCita);
 // Obtener detalles de una cita
 router.get('/citas/detalles/:idCita', FacturaCitaController.obtenerDetallesCita);
 
+// Eliminar factura (método existente)
 router.delete('/facturas/:id/eliminar', FacturaCitaController.eliminarFactura);
+
+// Eliminar factura por ID usando el procedimiento almacenado (NUEVO ENDPOINT)
+router.delete('/facturas/:id', FacturaCitaController.eliminarFacturaPorId);
 
 // Actualizar factura
 router.put('/facturas/:id/actualizar', FacturaCitaController.actualizarFactura);
-
-
 
 export default router;

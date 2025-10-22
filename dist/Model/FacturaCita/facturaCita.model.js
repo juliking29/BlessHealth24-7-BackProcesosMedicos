@@ -71,7 +71,6 @@ class FacturaCitaModel {
             throw new Error(`Error al obtener detalles de cita: ${error instanceof Error ? error.message : error}`);
         }
     }
-    // Añadir estos nuevos métodos a la clase FacturaModel
     // Eliminar factura
     static async eliminarFactura(idFactura) {
         try {
@@ -104,6 +103,38 @@ class FacturaCitaModel {
         }
         catch (error) {
             throw new Error(`Error al actualizar factura: ${error instanceof Error ? error.message : error}`);
+        }
+    }
+    // NUEVO MÉTODO: Eliminar factura por ID usando el procedimiento almacenado
+    static async eliminarFacturaPorId(idFactura) {
+        try {
+            const query = 'CALL EliminarFacturaPorId(?)';
+            const [rows] = await database_1.pool.query(query, [idFactura]);
+            // El procedimiento devuelve un mensaje en el primer elemento del array
+            const resultado = rows[0][0];
+            if (resultado.mensaje && resultado.mensaje.includes('eliminada correctamente')) {
+                return {
+                    success: true,
+                    message: resultado.mensaje,
+                    facturasEliminadas: 1
+                };
+            }
+            else {
+                return {
+                    success: false,
+                    message: resultado.mensaje || 'Error al eliminar la factura'
+                };
+            }
+        }
+        catch (error) {
+            // Manejar errores específicos de MySQL
+            if (error.code === '45000') {
+                return {
+                    success: false,
+                    message: error.sqlMessage || 'La factura no existe'
+                };
+            }
+            throw new Error(`Error al eliminar factura por ID: ${error instanceof Error ? error.message : error}`);
         }
     }
 }

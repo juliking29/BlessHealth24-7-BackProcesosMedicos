@@ -7,7 +7,9 @@ import {
     DetallesCita,
     ActualizarFacturaParams,
     ActualizarFacturaResult,
-    EliminarFacturaResult
+    EliminarFacturaResult,
+    EliminarFacturaPorIdParams,
+    EliminarFacturaPorIdResult
 } from '../../interfaces/FacturaCita/facturaCita.interface';
 
 export default class FacturaCitaModel {
@@ -88,41 +90,73 @@ export default class FacturaCitaModel {
         }
     }
 
-    // Añadir estos nuevos métodos a la clase FacturaModel
-
-// Eliminar factura
-public static async eliminarFactura(idFactura: number): Promise<EliminarFacturaResult> {
-    try {
-        const query = 'SELECT fn_eliminar_factura(?) AS resultado';
-        const [rows]: any = await pool.query(query, [idFactura]);
-        
-        const resultado = JSON.parse(rows[0].resultado);
-        return resultado;
-    } catch (error) {
-        throw new Error(`Error al eliminar factura: ${error instanceof Error ? error.message : error}`);
+    // Eliminar factura
+    public static async eliminarFactura(idFactura: number): Promise<EliminarFacturaResult> {
+        try {
+            const query = 'SELECT fn_eliminar_factura(?) AS resultado';
+            const [rows]: any = await pool.query(query, [idFactura]);
+            
+            const resultado = JSON.parse(rows[0].resultado);
+            return resultado;
+        } catch (error) {
+            throw new Error(`Error al eliminar factura: ${error instanceof Error ? error.message : error}`);
+        }
     }
-}
 
-// Actualizar factura
-public static async actualizarFactura(params: ActualizarFacturaParams): Promise<ActualizarFacturaResult> {
-    try {
-        const query = 'CALL sp_actualizar_factura(?, ?, ?, ?, ?, ?, ?, ?, @resultado); SELECT @resultado AS resultado';
-        const [rows]: any = await pool.query(query, [
-            params.idFactura,
-            params.idCita || 0, // Convertimos null/undefined a 0 para que se transforme a NULL en la BD
-            params.idEmergencia || 0,
-            params.concepto || null,
-            params.detalles || null,
-            params.fechaVencimiento || null,
-            params.subtotal || null,
-            params.observaciones || null
-        ]);
-        
-        // El procedimiento devuelve el resultado en el segundo conjunto de resultados
-        const resultado = JSON.parse(rows[1][0].resultado);
-        return resultado;
-    } catch (error) {
-        throw new Error(`Error al actualizar factura: ${error instanceof Error ? error.message : error}`);
+    // Actualizar factura
+    public static async actualizarFactura(params: ActualizarFacturaParams): Promise<ActualizarFacturaResult> {
+        try {
+            const query = 'CALL sp_actualizar_factura(?, ?, ?, ?, ?, ?, ?, ?, @resultado); SELECT @resultado AS resultado';
+            const [rows]: any = await pool.query(query, [
+                params.idFactura,
+                params.idCita || 0, // Convertimos null/undefined a 0 para que se transforme a NULL en la BD
+                params.idEmergencia || 0,
+                params.concepto || null,
+                params.detalles || null,
+                params.fechaVencimiento || null,
+                params.subtotal || null,
+                params.observaciones || null
+            ]);
+            
+            // El procedimiento devuelve el resultado en el segundo conjunto de resultados
+            const resultado = JSON.parse(rows[1][0].resultado);
+            return resultado;
+        } catch (error) {
+            throw new Error(`Error al actualizar factura: ${error instanceof Error ? error.message : error}`);
+        }
     }
-}
+
+    // NUEVO MÉTODO: Eliminar factura por ID usando el procedimiento almacenado
+    public static async eliminarFacturaPorId(idFactura: number): Promise<EliminarFacturaPorIdResult> {
+        try {
+            const query = 'CALL EliminarFacturaPorId(?)';
+            const [rows]: any = await pool.query(query, [idFactura]);
+            
+            // El procedimiento devuelve un mensaje en el primer elemento del array
+            const resultado = rows[0][0];
+            
+            if (resultado.mensaje && resultado.mensaje.includes('eliminada correctamente')) {
+                return {
+                    success: true,
+                    message: resultado.mensaje,
+                    facturasEliminadas: 1
+                };
+            } else {
+                return {
+                    success: false,
+                    message: resultado.mensaje || 'Error al eliminar la factura'
+                };
+            }
+        } catch (error: any) {
+            // Manejar errores específicos de MySQL
+            if (error.code === '45000') {
+                return {
+                    success: false,
+                    message: error.sqlMessage || 'La factura no existe'
+                };
+            }
+            
+            throw new Error(`Error al eliminar factura por ID: ${error instanceof Error ? error.message : error}`);
+        }
+    }
 }

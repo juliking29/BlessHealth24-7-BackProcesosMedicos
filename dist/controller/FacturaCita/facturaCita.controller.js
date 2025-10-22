@@ -119,7 +119,6 @@ class FacturaCitaController {
             });
         }
     }
-    // Añadir estos nuevos métodos a la clase FacturaController
     // Eliminar factura
     static async eliminarFactura(req, res) {
         try {
@@ -184,6 +183,39 @@ class FacturaCitaController {
             res.status(500).json({
                 success: false,
                 message: 'Error al actualizar factura',
+                error: error instanceof Error ? error.message : error
+            });
+        }
+    }
+    // NUEVO MÉTODO: Eliminar factura por ID usando el procedimiento almacenado
+    static async eliminarFacturaPorId(req, res) {
+        try {
+            const { id } = req.params;
+            if (!id || isNaN(parseInt(id))) {
+                res.status(400).json({
+                    success: false,
+                    message: 'El ID de la factura es requerido y debe ser un número válido'
+                });
+                return;
+            }
+            const resultado = await facturaCita_model_1.default.eliminarFacturaPorId(parseInt(id));
+            if (!resultado.success) {
+                res.status(404).json({
+                    success: false,
+                    message: resultado.message
+                });
+                return;
+            }
+            res.json({
+                success: true,
+                message: resultado.message,
+                facturasEliminadas: resultado.facturasEliminadas
+            });
+        }
+        catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Error al eliminar factura por ID',
                 error: error instanceof Error ? error.message : error
             });
         }

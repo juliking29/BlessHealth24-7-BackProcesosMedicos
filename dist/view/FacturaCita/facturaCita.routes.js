@@ -14,7 +14,10 @@ router.get('/facturas/por-cedula/:cedula', facturaCita_controller_1.default.obte
 router.put('/citas/actualizar/:idCita', facturaCita_controller_1.default.actualizarCita);
 // Obtener detalles de una cita
 router.get('/citas/detalles/:idCita', facturaCita_controller_1.default.obtenerDetallesCita);
+// Eliminar factura (método existente)
 router.delete('/facturas/:id/eliminar', facturaCita_controller_1.default.eliminarFactura);
+// Eliminar factura por ID usando el procedimiento almacenado (NUEVO ENDPOINT)
+router.delete('/facturas/:id', facturaCita_controller_1.default.eliminarFacturaPorId);
 // Actualizar factura
 router.put('/facturas/:id/actualizar', facturaCita_controller_1.default.actualizarFactura);
 exports.default = router;
